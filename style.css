@@ -13,6 +13,8 @@ body{
     display:flex;
     align-items: center;
     justify-content: center;
+    
+    flex-direction: column;
 }
 
 .container{
@@ -99,4 +101,21 @@ body{
 
 .completed{
     text-decoration: line-through;
+}
+
+
+
+    
+.dev-credits{
+
+    margin-top: 5%;
+
+    color:white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    opacity: 0.4;
+    text-align: center;
+    font-size: 3vw;
 }
