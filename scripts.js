@@ -4,6 +4,12 @@ const taskContainer = document.querySelector(".tasks-container");
 
 const validateInput = () => inputElement.value.trim().length > 0
 
+inputElement.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+        handleAddTask();
+    }
+});
+
 const handleAddTask = () =>{
     const inputIsValid = validateInput();
 
@@ -11,25 +17,7 @@ const handleAddTask = () =>{
         return inputElement.classList.add("error");
     }
 
-    const taskItemContainer = document.createElement('div');
-    taskItemContainer.classList.add('task-item');
-
-    const taskContent = document.createElement('p');
-    taskContent.classList.add("task-text");
-    taskContent.innerText = inputElement.value;
-
-    taskContent.addEventListener('click', () => handleClick(taskContent));
-    
-    const deleteIcon = document.createElement('p');
-    deleteIcon.classList.add("delete-icon");
-    deleteIcon.innerText = "x";
-
-    deleteIcon.addEventListener('click', () => handleDeleteClick(taskItemContainer, taskContent));
-
-    taskItemContainer.appendChild(taskContent);
-    taskItemContainer.appendChild(deleteIcon);
-
-    taskContainer.appendChild(taskItemContainer);
+    handleAddTaskFunction(inputElement.value, false, null);
 
     inputElement.value = "";
 
@@ -90,33 +78,39 @@ const refreshTasksUsingLocalStorage = () =>{
 
     for(const task of tasksFromLocalStorage){
 
-        const taskItemContainer = document.createElement('div');
-        taskItemContainer.classList.add('task-item');
-
-        const taskContent = document.createElement('p');
-        taskContent.classList.add("task-text");
-        taskContent.innerText = task.description;
-
-        if(task.isCompleted){
-
-            taskContent.classList.add("completed");
-        }
-
-        taskContent.addEventListener('click', () => handleClick(taskContent));
-        
-        const deleteIcon = document.createElement('p');
-        deleteIcon.classList.add("delete-icon");
-        deleteIcon.innerText = "x";
-
-        deleteIcon.addEventListener('click', () => handleDeleteClick(taskItemContainer, taskContent));
-
-        taskItemContainer.appendChild(taskContent);
-        taskItemContainer.appendChild(deleteIcon);
-
-        taskContainer.appendChild(taskItemContainer);
-
+        taskToAdd = task.description;
+        handleAddTaskFunction(taskToAdd, true, task);
     }    
 }
+
+
+const handleAddTaskFunction = (taskToAdd, refresh, task) => {
+
+    const taskItemContainer = document.createElement('div');
+    taskItemContainer.classList.add('task-item');
+
+    const taskContent = document.createElement('p');
+    taskContent.classList.add("task-text");
+    taskContent.innerText = taskToAdd;
+
+    if (refresh && task.isCompleted) {
+        taskContent.classList.add("completed");
+    }
+
+    taskContent.addEventListener('click', () => handleClick(taskContent));
+    
+    const deleteIcon = document.createElement('p');
+    deleteIcon.classList.add("delete-icon");
+    deleteIcon.innerText = "x";
+
+    deleteIcon.addEventListener('click', () => handleDeleteClick(taskItemContainer, taskContent));
+
+    taskItemContainer.appendChild(taskContent);
+    taskItemContainer.appendChild(deleteIcon);
+
+    taskContainer.appendChild(taskItemContainer);
+}
+
 
 refreshTasksUsingLocalStorage();
 
